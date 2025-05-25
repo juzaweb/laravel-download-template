@@ -48,7 +48,7 @@ php artisan style:download
 | -------------- | -------- | ---------------------------------------- | ------------ |
 | `--output`     | `-o`     | Output directory to save files           | `resources`  |
 | `--mix`        |          | Generate `webpack.mix.js` file           | false        |
-| `--mix-output` |          | Directory where Mix output will be saved | `''` (empty) |
+| `--mix-output` |          | Directory where `webpack.mix.js` file will be saved | root (empty) |
 
 ---
 
