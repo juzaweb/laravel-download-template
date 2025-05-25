@@ -1,9 +1,23 @@
 <?php
 
 return [
+    /**
+     * Domain to exclude from download
+     * @var array
+     */
     'exclude_domains' => [
         'fonts.googleapis.com',
         'maps.googleapis.com',
     ],
-    'font_extensions' => ['woff', 'woff2', 'ttf', 'eot', 'otf'],
+
+    /**
+     * Font extensions
+     */
+    'font_extensions' => [
+        'woff',
+        'woff2',
+        'ttf',
+        'eot',
+        'otf',
+    ],
 ];
