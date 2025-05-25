@@ -20,4 +20,9 @@ return [
         'eot',
         'otf',
     ],
+
+    /**
+     * Default layout for download template
+     */
+    'default_layout' => 'layouts.app',
 ];

@@ -58,9 +58,11 @@ class DownloadTemplateCommand extends DownloadTemplateCommandAbstract
 
         $content = str_get_html($contents)->find($this->data['container'], 0)->outertext;
 
+        $layout = $this->option('layout') ?? config('template-downloader.default_layout', 'layouts.app');
+
         File::put(
             base_path($path),
-            "@extends('{$this->option('layout')}')
+            "@extends('{$layout}')
 
                 @section('content')
                     {$content}
@@ -74,7 +76,7 @@ class DownloadTemplateCommand extends DownloadTemplateCommandAbstract
     {
         return [
             ['output', 'o', InputOption::VALUE_OPTIONAL, 'Output path', 'resources/views'],
-            ['layout', null, InputOption::VALUE_OPTIONAL, 'Layout', 'layouts.app'],
+            ['layout', null, InputOption::VALUE_OPTIONAL, 'Layout'],
         ];
     }
 }
