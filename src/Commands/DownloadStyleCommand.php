@@ -4,12 +4,13 @@ namespace Juzaweb\TemplateDownloader\Commands;
 
 use Illuminate\Support\Facades\File;
 use Juzaweb\HtmlDom\HtmlDom;
+use Symfony\Component\Console\Input\InputOption;
 
 class DownloadStyleCommand extends DownloadTemplateCommandAbstract
 {
     protected $signature = 'style:download';
 
-    protected array $data;
+    protected array $data = [];
 
     public function handle(): void
     {
@@ -23,17 +24,18 @@ class DownloadStyleCommand extends DownloadTemplateCommandAbstract
 
         $js = $this->downloadJs($domp);
 
+        $output = $this->option('output') ?? 'public';
         $mix = "const mix = require('laravel-mix');
 
 mix.styles([
     ". implode(",\n", $css) ."
-], 'themes/{$this->data['name']}/assets/public/css/main.css');
+], '{$output}/css/main.css');
 
 mix.combine([
     ". implode(",\n", $js) ."
-], 'themes/{$this->data['name']}/assets/public/js/main.js');";
-
-        File::put("themes/{$this->data['name']}/assets/mix.js", $mix);
+], '{$output}/js/main.js');";
+        
+        File::put(base_path("{$output}/webpack.mix.js"), $mix);
     }
 
     protected function sendAsks(): void
@@ -44,18 +46,13 @@ mix.combine([
         );
 
         $this->setDataDefault('url', $this->data['url']);
-
-        $this->data['name'] = $this->ask(
-            'Theme Name?',
-            $this->getDataDefault('name')
-        );
-
-        $this->setDataDefault('name', $this->data['name']);
     }
 
     protected function downloadCss(HtmlDom $domp): array
     {
         $result = [];
+        $output = $this->option('output') ?? 'public';
+
         foreach ($domp->find('link[rel="stylesheet"]') as $e) {
             $href = $e->href;
             $href = $this->parseHref($href);
@@ -66,7 +63,7 @@ mix.combine([
 
             $name = explode('?', basename($href))[0];
 
-            $path = "themes/{$this->data['name']}/assets/css/{$name}";
+            $path = "{$output}/css/{$name}";
 
             $this->downloadFile($href, base_path($path));
 
@@ -74,12 +71,15 @@ mix.combine([
 
             $this->info("-- Downloaded file {$path}");
         }
+
         return $result;
     }
 
     protected function downloadJs(HtmlDom $domp): array
     {
         $result = [];
+        $output = $this->option('output') ?? 'public';
+
         foreach ($domp->find('script') as $e) {
             $href = $e->src;
             if (empty($href)) {
@@ -96,7 +96,7 @@ mix.combine([
 
             $name = explode('?', basename($href))[0];
 
-            $path = "themes/{$this->data['name']}/assets/js/{$name}";
+            $path = "{$output}/js/{$name}";
 
             try {
                 $this->downloadFile($href, base_path($path));
@@ -129,5 +129,13 @@ mix.combine([
         }
 
         return $href;
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            ['output', 'o', InputOption::VALUE_OPTIONAL, 'Output path', null],
+            ['mix', null, InputOption::VALUE_NONE, 'Use mix', false],
+        ];
     }
 }

@@ -8,10 +8,12 @@ class TemplateDownloaderServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->commands(
-            [
-                \Juzaweb\TemplateDownloader\Commands\DownloadStyleCommand::class,
-            ]
-        );
+        if ($this->app->runningInConsole()) {
+            $this->commands(
+                [
+                    \Juzaweb\TemplateDownloader\Commands\DownloadStyleCommand::class,
+                ]
+            );
+        }
     }
 }
