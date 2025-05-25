@@ -12,6 +12,7 @@ class TemplateDownloaderServiceProvider extends ServiceProvider
             $this->commands(
                 [
                     \Juzaweb\TemplateDownloader\Commands\DownloadStyleCommand::class,
+                    \Juzaweb\TemplateDownloader\Commands\DownloadTemplateCommand::class,
                 ]
             );
         }

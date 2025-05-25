@@ -8,7 +8,9 @@ use Symfony\Component\Console\Input\InputOption;
 
 class DownloadStyleCommand extends DownloadTemplateCommandAbstract
 {
-    protected $signature = 'style:download';
+    protected $name = 'style:download';
+
+    protected $description = 'Download styles (css and js) from url';
 
     protected array $data = [];
 
@@ -145,7 +147,7 @@ mix.combine([
     {
         return [
             ['output', 'o', InputOption::VALUE_OPTIONAL, 'Output path', 'public'],
-            ['mix', null, InputOption::VALUE_NONE, 'Use mix', false],
+            ['mix', null, InputOption::VALUE_NONE, 'Use mix'],
         ];
     }
 }
