@@ -28,22 +28,11 @@ abstract class DownloadTemplateCommandAbstract extends Command
         Cache::forever('html_download', $data);
     }
 
-    protected function getDataDefault(string $key, string $default = null): ?string
+    protected function getDataDefault(string $key, ?string $default = null): ?string
     {
         $data = Cache::get('html_download', []);
 
         return Arr::get($data, $key, $default);
-    }
-
-    protected function getFontExtensions(): array
-    {
-        return [
-            'eot',
-            'woff2',
-            'woff',
-            'ttf',
-            'svg'
-        ];
     }
 
     protected function downloadFile(string $url, string $path): void
@@ -92,10 +81,7 @@ abstract class DownloadTemplateCommandAbstract extends Command
     {
         return in_array(
             $this->getDomainUrl($url),
-            [
-                'fonts.googleapis.com',
-                'maps.googleapis.com',
-            ]
+            config('template-downloader.exclude_domains', []),
         );
     }
 

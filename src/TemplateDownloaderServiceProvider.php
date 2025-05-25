@@ -17,4 +17,13 @@ class TemplateDownloaderServiceProvider extends ServiceProvider
             );
         }
     }
+
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/template-downloader.php', 'template-downloader');
+
+        $this->publishes([
+            __DIR__.'/../config/template-downloader.php' => config_path('template-downloader.php')
+        ], 'template-downloader-config');
+    }
 }

@@ -83,10 +83,49 @@ mix.combine([
 
             $result[] = "'{$path}'";
 
+            // $this->downloadAssetsFromCss([$path]);
+
             $this->info("-- Downloaded file {$path}");
         }
 
         return $result;
+    }
+
+    protected function downloadAssetsFromCss(array $cssFiles): void
+    {
+        foreach ($cssFiles as $cssPath) {
+            $fullPath = base_path(trim($cssPath, "'"));
+            
+            if (!File::exists($fullPath)) {
+                continue;
+            }
+
+            $content = File::get($fullPath);
+            preg_match_all('/url\(["\']?(.*?)["\']?\)/i', $content, $matches);
+
+            foreach ($matches[1] as $assetUrl) {
+                $parsedUrl = $this->parseHref($assetUrl);
+
+                if ($this->isExcludeDomain($parsedUrl)) {
+                    continue;
+                }
+
+                $urlPath = parse_url($assetUrl, PHP_URL_PATH);
+                if (! $urlPath) {
+                    continue;
+                }
+
+                $relativePath = ltrim($urlPath, '/');
+                $savePath = $this->option('output') . '/' . $relativePath;
+
+                try {
+                    $this->downloadFile($parsedUrl, base_path($savePath));
+                    $this->info("-- Downloaded asset {$savePath}");
+                } catch (\Exception $e) {
+                    $this->warn("Failed to download asset: {$parsedUrl}");
+                }
+            }
+        }
     }
 
     protected function downloadJs(HtmlDom $domp): array
@@ -124,7 +163,7 @@ mix.combine([
         return $result;
     }
 
-    protected function parseHref($href): mixed
+    protected function parseHref(string $href): mixed
     {
         if (str_starts_with($href, '//')) {
             $href = 'https:' . $href;
