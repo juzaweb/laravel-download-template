@@ -135,7 +135,7 @@ php artisan html:download
 | Option     | Shortcut | Description                    | Default                   |
 | ---------- | -------- | ------------------------------ | ------------------------- |
 | `--output` | `-o`     | Output path for the Blade file | `resources/views`         |
-| `--layout` |          | Blade layout to extend         | `theme::layouts.frontend` |
+| `--layout` |          | Blade layout to extend         | `layouts.app` |
 
 ---
 
@@ -170,7 +170,7 @@ resources/views/home.blade.php
 With contents similar to:
 
 ```blade
-@extends('theme::layouts.frontend')
+@extends('layouts.app')
 
 @section('content')
     <div class="main-content">

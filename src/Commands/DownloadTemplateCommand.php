@@ -74,7 +74,7 @@ class DownloadTemplateCommand extends DownloadTemplateCommandAbstract
     {
         return [
             ['output', 'o', InputOption::VALUE_OPTIONAL, 'Output path', 'resources/views'],
-            ['layout', null, InputOption::VALUE_OPTIONAL, 'Layout', 'theme::layouts.frontend'],
+            ['layout', null, InputOption::VALUE_OPTIONAL, 'Layout', 'layouts.app'],
         ];
     }
 }
