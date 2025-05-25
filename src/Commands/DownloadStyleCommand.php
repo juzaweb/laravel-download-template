@@ -24,7 +24,17 @@ class DownloadStyleCommand extends DownloadTemplateCommandAbstract
 
         $js = $this->downloadJs($domp);
 
-        $output = $this->option('output') ?? 'public';
+        $this->generateMixFile($css, $js);
+    }
+
+    protected function generateMixFile(array $css, array $js): void
+    {
+        if (! $this->option('mix')) {
+            return;
+        }
+
+        $output = $this->option('output');
+
         $mix = "const mix = require('laravel-mix');
 
 mix.styles([
@@ -34,7 +44,7 @@ mix.styles([
 mix.combine([
     ". implode(",\n", $js) ."
 ], '{$output}/js/main.js');";
-        
+
         File::put(base_path("{$output}/webpack.mix.js"), $mix);
     }
 
@@ -51,7 +61,7 @@ mix.combine([
     protected function downloadCss(HtmlDom $domp): array
     {
         $result = [];
-        $output = $this->option('output') ?? 'public';
+        $output = $this->option('output');
 
         foreach ($domp->find('link[rel="stylesheet"]') as $e) {
             $href = $e->href;
@@ -78,7 +88,7 @@ mix.combine([
     protected function downloadJs(HtmlDom $domp): array
     {
         $result = [];
-        $output = $this->option('output') ?? 'public';
+        $output = $this->option('output');
 
         foreach ($domp->find('script') as $e) {
             $href = $e->src;
@@ -134,7 +144,7 @@ mix.combine([
     protected function getOptions(): array
     {
         return [
-            ['output', 'o', InputOption::VALUE_OPTIONAL, 'Output path', null],
+            ['output', 'o', InputOption::VALUE_OPTIONAL, 'Output path', 'public'],
             ['mix', null, InputOption::VALUE_NONE, 'Use mix', false],
         ];
     }
