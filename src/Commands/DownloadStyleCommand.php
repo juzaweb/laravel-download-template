@@ -35,7 +35,7 @@ class DownloadStyleCommand extends DownloadTemplateCommandAbstract
             return;
         }
 
-        $output = $this->option('output');
+        $output = $this->option('mix-output');
 
         $mix = "const mix = require('laravel-mix');
 
@@ -48,6 +48,8 @@ mix.combine([
 ], '{$output}/js/main.js');";
 
         File::put(base_path("{$output}/webpack.mix.js"), $mix);
+
+        $this->info("-- Generated {$output}/webpack.mix.js");
     }
 
     protected function sendAsks(): void
@@ -146,8 +148,9 @@ mix.combine([
     protected function getOptions(): array
     {
         return [
-            ['output', 'o', InputOption::VALUE_OPTIONAL, 'Output path', 'public'],
+            ['output', 'o', InputOption::VALUE_OPTIONAL, 'Output path', 'resources'],
             ['mix', null, InputOption::VALUE_NONE, 'Use mix'],
+            ['mix-output', null, InputOption::VALUE_OPTIONAL, 'Mix output path', ''],
         ];
     }
 }
