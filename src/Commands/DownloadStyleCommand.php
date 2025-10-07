@@ -79,9 +79,17 @@ mix.combine([
 
             $path = "{$output}/css/{$name}";
 
-            $this->downloadFile($href, base_path($path));
+            try {
+                $this->downloadFile($href, base_path($path));
 
-            $result[] = "'{$path}'";
+                $result[] = "'{$path}'";
+
+                // $this->downloadAssetsFromCss([$path]);
+
+                $this->info("-- Downloaded file {$path}");
+            } catch (\Exception $e) {
+                $this->warn("Download error {$href}: " . $e->getMessage());
+            }
 
             // $this->downloadAssetsFromCss([$path]);
 
